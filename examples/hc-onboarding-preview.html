@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome to Hilscher-Clarke — First-Year Onboarding</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="scorm_api.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+/* ── HC Brand Palette ─────────────────────────────────────────── */
+:root {
+  --hc-yellow: #F7DF16;
+  --hc-yellow-dark: #d4bf00;
+  --hc-red: #FF0000;
+  --hc-black: #0a0a0a;
+  --hc-dark: #1a1a1a;
+  --hc-dark2: #222;
+  --hc-dark3: #2a2a2a;
+  --hc-gray: #999;
+  --hc-light-gray: #ccc;
+  --hc-white: #f5f5f5;
+  --hc-text: #e8e8e8;
+  --hc-text-sec: #d0d0d0;
+  --hc-border: #333;
+  --hc-border-strong: #555;
+  --hc-surface: #161616;
+  --hc-surface2: #1e1e1e;
+  --hc-shadow: rgba(0,0,0,.6);
+  --hc-green: #22c55e;
+  --hc-danger: #ef4444;
+}
+
+/* ── Light Mode ───────────────────────────────────────────────── */
+[data-theme="light"] {
+  --hc-yellow: #c9a800;
+  --hc-yellow-dark: #a08600;
+  --hc-red: #cc0000;
+  --hc-black: #f5f5f0;
+  --hc-dark: #e8e8e3;
+  --hc-dark2: #eeeee9;
+  --hc-dark3: #e0e0db;
+  --hc-gray: #666;
+  --hc-light-gray: #999;
+  --hc-white: #1a1a1a;
+  --hc-text: #1a1a1a;
+  --hc-text-sec: #555;
+  --hc-border: #d0d0cb;
+  --hc-border-strong: #aaa;
+  --hc-surface: #fff;
+  --hc-surface2: #f0f0eb;
+  --hc-shadow: rgba(0,0,0,.12);
+  --hc-green: #16a34a;
+  --hc-danger: #dc2626;
+}
+
+html, body {
+  height: 100%;
+  background: var(--hc-black);
+  color: var(--hc-text);
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+a { color: var(--hc-yellow); text-decoration: none; }
+a:hover { text-decoration: underline; }
+[data-theme="light"] a { color: #996d00; }
+
+/* ── Skip Link ────────────────────────────────────────────────── */
+.skip-link {
+  position: absolute; top: -100px; left: 16px;
+  background: var(--hc-yellow); color: var(--hc-black);
+  padding: 10px 18px; border-radius: 0 0 8px 8px;
+  font-weight: 700; z-index: 9999; transition: top .2s;
+}
+.skip-link:focus { top: 0; }
+:focus-visible { outline: 3px solid var(--hc-yellow); outline-offset: 3px; border-radius: 4px; }
+
+/* ── Header ───────────────────────────────────────────────────── */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,10,10,.97); backdrop-filter: blur(12px);
+  border-bottom: 3px solid var(--hc-yellow);
+  padding: 12px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+}
+.header-left { display: flex; align-items: center; gap: 14px; }
+.hc-logo { display: flex; align-items: center; gap: 10px; }
+.hc-logo-mark {
+  width: 44px; height: 44px; background: var(--hc-yellow);
+  border-radius: 4px; display: flex; align-items: center; justify-content: center;
+  font-family: 'Inter', sans-serif; font-weight: 900; font-size: 22px;
+  color: var(--hc-black); letter-spacing: -1px; line-height: 1;
+  position: relative;
+}
+.hc-logo-bolt {
+  position: absolute; top: -5px; right: -5px; font-size: 12px;
+  color: var(--hc-yellow); background: var(--hc-black); border-radius: 50%;
+  width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+}
+.hc-logo-text {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .12em; color: var(--hc-white); line-height: 1.3;
+}
+.hc-logo-text span { display: block; color: var(--hc-yellow); font-size: 13px; }
+.header-center { flex: 1; max-width: 320px; min-width: 160px; }
+.progress-label {
+  display: flex; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  color: var(--hc-text-sec); margin-bottom: 5px; font-weight: 600;
+  letter-spacing: .06em;
+}
+.progress-track { height: 5px; background: var(--hc-dark3); border-radius: 99px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--hc-yellow); border-radius: 99px; transition: width .4s ease; width: 0%; }
+.header-right { display: flex; align-items: center; gap: 10px; }
+.nav-dots { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+.nav-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 2px solid var(--hc-border-strong);
+  cursor: pointer; transition: all .2s; background: transparent; padding: 0;
+}
+.nav-dot.active { background: var(--hc-yellow); border-color: var(--hc-yellow); box-shadow: 0 0 8px rgba(247,223,22,.4); }
+.nav-dot.done { background: var(--hc-green); border-color: var(--hc-green); }
+
+/* ── Main Content ─────────────────────────────────────────────── */
+main { position: relative; z-index: 1; max-width: 920px; margin: 0 auto; padding: 48px 24px 120px; }
+.screen { display: none; animation: fadeSlide .35s ease; }
+.screen.active { display: block; }
+@keyframes fadeSlide { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── Typography ───────────────────────────────────────────────── */
+h1 { font-size: clamp(32px, 5.5vw, 56px); font-weight: 900; line-height: 1.08; letter-spacing: -.03em; margin-bottom: 24px; text-transform: uppercase; }
+h2 { font-size: clamp(22px, 3.5vw, 30px); font-weight: 800; line-height: 1.2; letter-spacing: -.02em; margin-bottom: 14px; }
+h3 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; }
+p { margin-bottom: 16px; line-height: 1.7; }
+.hl-yellow { color: var(--hc-yellow); }
+.hl-red { color: var(--hc-red); }
+.hl-green { color: var(--hc-green); }
+.eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--hc-yellow); letter-spacing: .14em; text-transform: uppercase; margin-bottom: 14px; font-weight: 700; }
+.screen-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--hc-text-sec); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; font-weight: 600; }
+.section-sub { font-size: 17px; color: var(--hc-text-sec); margin-bottom: 28px; line-height: 1.7; max-width: 720px; }
+
+/* ── Cards ────────────────────────────────────────────────────── */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 24px 0; }
+.info-card { background: var(--hc-surface); border: 1px solid var(--hc-border); border-radius: 10px; padding: 22px 20px; transition: border-color .2s; }
+.info-card:hover { border-color: var(--hc-yellow); }
+.info-card-icon { font-size: 26px; margin-bottom: 10px; display: block; color: var(--hc-text-sec); }
+.info-card-icon.ic-yellow { color: var(--hc-yellow); }
+.info-card-icon.ic-red { color: var(--hc-red); }
+.info-card-icon.ic-green { color: var(--hc-green); }
+.info-card-title { font-weight: 800; font-size: 16px; margin-bottom: 8px; color: var(--hc-yellow); }
+.info-card-title.c-red { color: var(--hc-red); }
+.info-card-title.c-green { color: var(--hc-green); }
+.info-card-text { font-size: 15px; color: var(--hc-text-sec); line-height: 1.65; }
+
+/* ── Values Strip ─────────────────────────────────────────────── */
+.values-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--hc-border); border: 1px solid var(--hc-border); border-radius: 10px; overflow: hidden; margin: 28px 0; }
+.values-strip .v-item { background: var(--hc-surface); padding: 20px 12px; text-align: center; }
+.v-item-letter { font-size: 28px; font-weight: 900; color: var(--hc-yellow); line-height: 1; margin-bottom: 6px; }
+.v-item-word { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--hc-text); }
+.v-item-desc { font-size: 12px; color: var(--hc-text-sec); margin-top: 4px; line-height: 1.4; }
+
+/* ── Callouts ─────────────────────────────────────────────────── */
+.callout { border-left: 4px solid; border-radius: 0 8px 8px 0; padding: 18px 20px; margin: 20px 0; font-size: 15px; line-height: 1.65; background: var(--hc-surface2); }
+.callout-title { font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 7px; }
+.callout-yellow { border-color: var(--hc-yellow); } .callout-yellow .callout-title { color: var(--hc-yellow); }
+.callout-red { border-color: var(--hc-red); } .callout-red .callout-title { color: var(--hc-red); }
+.callout-green { border-color: var(--hc-green); } .callout-green .callout-title { color: var(--hc-green); }
+
+/* ── Timeline ─────────────────────────────────────────────────── */
+.timeline { margin: 24px 0; padding-left: 24px; border-left: 3px solid var(--hc-yellow); }
+.timeline-item { margin-bottom: 20px; position: relative; }
+.timeline-item::before { content: ''; position: absolute; left: -30px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--hc-yellow); border: 3px solid var(--hc-black); }
+.timeline-year { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: var(--hc-yellow); margin-bottom: 4px; }
+.timeline-text { font-size: 15px; color: var(--hc-text-sec); }
+
+/* ── Matching Game ────────────────────────────────────────────── */
+.match-game { margin: 28px 0; }
+.match-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+.match-col-title { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--hc-yellow); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 12px; }
+.match-item {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--hc-surface); border: 2px solid var(--hc-border);
+  border-radius: 8px; padding: 14px 16px; cursor: pointer;
+  transition: all .2s; font-size: 15px; margin-bottom: 8px;
+  user-select: none;
+}
+.match-item:hover { border-color: var(--hc-yellow); }
+.match-item.selected { border-color: var(--hc-yellow); background: rgba(247,223,22,.08); }
+.match-item.matched { border-color: var(--hc-green); background: rgba(34,197,94,.08); cursor: default; opacity: .7; }
+.match-item.wrong { border-color: var(--hc-danger); animation: matchShake .4s ease; }
+@keyframes matchShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+.match-letter {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--hc-dark3); border: 2px solid var(--hc-border-strong);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace; font-size: 16px;
+  font-weight: 900; color: var(--hc-yellow); flex-shrink: 0;
+}
+.match-item.selected .match-letter { background: var(--hc-yellow); color: var(--hc-black); border-color: var(--hc-yellow); }
+.match-item.matched .match-letter { background: var(--hc-green); color: #fff; border-color: var(--hc-green); }
+.match-def-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--hc-dark3); border: 2px solid var(--hc-border-strong);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  font-weight: 700; color: var(--hc-text-sec); flex-shrink: 0;
+}
+.match-item.matched .match-def-num { background: var(--hc-green); color: #fff; border-color: var(--hc-green); }
+.match-score-bar {
+  text-align: center; margin-top: 16px; font-family: 'JetBrains Mono', monospace;
+  font-size: 14px; color: var(--hc-text-sec); font-weight: 600;
+}
+.match-score-bar .match-count { color: var(--hc-yellow); font-size: 18px; }
+[data-theme="light"] .match-item { background: var(--hc-surface); }
+[data-theme="light"] .match-item.selected { background: rgba(201,168,0,.08); }
+[data-theme="light"] .match-letter { background: var(--hc-surface2); }
+
+/* ── Quiz ─────────────────────────────────────────────────────── */
+.quiz-block { margin: 28px 0; }
+.quiz-q { background: var(--hc-surface); border: 1px solid var(--hc-border); border-radius: 10px; padding: 22px; margin-bottom: 16px; }
+.quiz-q-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--hc-yellow); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+.quiz-q-text { font-size: 16px; font-weight: 600; margin-bottom: 14px; }
+.quiz-opts { display: flex; flex-direction: column; gap: 8px; }
+.quiz-opt {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--hc-dark2); border: 2px solid var(--hc-border);
+  border-radius: 8px; padding: 12px 16px; cursor: pointer;
+  transition: all .2s; font-size: 15px;
+}
+.quiz-opt:hover { border-color: var(--hc-yellow); background: var(--hc-dark3); }
+.quiz-opt.selected { border-color: var(--hc-yellow); background: rgba(247,223,22,.08); }
+.quiz-opt.correct { border-color: var(--hc-green); background: rgba(34,197,94,.1); }
+.quiz-opt.incorrect { border-color: var(--hc-danger); background: rgba(239,68,68,.08); opacity: .6; }
+.quiz-opt-letter {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--hc-dark3); border: 2px solid var(--hc-border-strong);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  font-weight: 700; color: var(--hc-text-sec); flex-shrink: 0; transition: all .2s;
+}
+.quiz-opt.selected .quiz-opt-letter { background: var(--hc-yellow); color: var(--hc-black); border-color: var(--hc-yellow); }
+.quiz-opt.correct .quiz-opt-letter { background: var(--hc-green); color: #fff; border-color: var(--hc-green); }
+.quiz-feedback { margin-top: 10px; padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; display: none; }
+.quiz-feedback.show { display: block; }
+.quiz-feedback.pass { background: rgba(34,197,94,.12); color: var(--hc-green); border: 1px solid rgba(34,197,94,.3); }
+.quiz-feedback.fail { background: rgba(239,68,68,.12); color: var(--hc-danger); border: 1px solid rgba(239,68,68,.3); }
+
+/* ── Buttons ──────────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px; background: var(--hc-yellow); color: var(--hc-black);
+  border: 2px solid var(--hc-yellow); border-radius: 8px;
+  font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800;
+  cursor: pointer; transition: background .2s, transform .15s, box-shadow .2s;
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--hc-shadow); }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px; background: transparent; color: var(--hc-yellow);
+  border: 2px solid var(--hc-yellow); border-radius: 8px;
+  font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700;
+  cursor: pointer; transition: all .2s; text-transform: uppercase; letter-spacing: .04em;
+}
+.btn-secondary:hover { background: rgba(247,223,22,.1); }
+
+/* ── Footer Nav ───────────────────────────────────────────────── */
+.footer-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(10,10,10,.97); backdrop-filter: blur(12px);
+  border-top: 1px solid var(--hc-border); padding: 14px 28px;
+  display: flex; justify-content: space-between; align-items: center; z-index: 100;
+}
+.footer-nav button { font-family: 'Inter', sans-serif; }
+
+/* ── Score Banner ─────────────────────────────────────────────── */
+.score-banner { background: var(--hc-surface); border: 2px solid var(--hc-yellow); border-radius: 12px; padding: 28px; text-align: center; margin: 28px 0; }
+.score-big { font-size: 64px; font-weight: 900; color: var(--hc-yellow); line-height: 1; margin-bottom: 8px; }
+.score-label { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--hc-text-sec); text-transform: uppercase; letter-spacing: .1em; }
+.score-status { font-size: 20px; font-weight: 800; margin-top: 12px; text-transform: uppercase; }
+.score-status.pass { color: var(--hc-green); }
+.score-status.fail { color: var(--hc-danger); }
+
+/* ── Dividers ─────────────────────────────────────────────────── */
+hr { border: none; border-top: 1px solid var(--hc-border); margin: 36px 0; }
+
+/* ── Theme Toggle ─────────────────────────────────────────────── */
+.theme-toggle {
+  background: var(--hc-dark3); border: 1px solid var(--hc-border);
+  border-radius: 6px; padding: 6px 10px; color: var(--hc-text-sec);
+  font-size: 16px; cursor: pointer; transition: color .2s, background .2s;
+  display: flex; align-items: center; gap: 4px; line-height: 1;
+}
+.theme-toggle:hover { color: var(--hc-yellow); border-color: var(--hc-yellow); }
+
+/* ── Light Mode Overrides ─────────────────────────────────────── */
+[data-theme="light"] .header { background: rgba(245,245,240,.97); border-bottom-color: var(--hc-yellow); }
+[data-theme="light"] .hc-logo-text { color: #1a1a1a; }
+[data-theme="light"] .hc-logo-text span { color: var(--hc-yellow); }
+[data-theme="light"] .hc-logo-bolt { background: var(--hc-black); color: var(--hc-yellow); }
+[data-theme="light"] .footer-nav { background: rgba(245,245,240,.97); border-top-color: var(--hc-border); }
+[data-theme="light"] .btn-primary { background: #1a1a1a; color: var(--hc-yellow); border-color: #1a1a1a; }
+[data-theme="light"] .btn-secondary { color: #1a1a1a; border-color: #1a1a1a; }
+[data-theme="light"] .btn-secondary:hover { background: rgba(0,0,0,.05); }
+[data-theme="light"] .hc-logo-mark { background: #1a1a1a; color: var(--hc-yellow); }
+[data-theme="light"] .timeline-item::before { border-color: var(--hc-black); }
+[data-theme="light"] .quiz-opt { background: var(--hc-surface); }
+[data-theme="light"] .quiz-opt:hover { background: var(--hc-surface2); }
+[data-theme="light"] .quiz-opt.selected { background: rgba(201,168,0,.08); }
+[data-theme="light"] .quiz-opt-letter { background: var(--hc-surface2); }
+[data-theme="light"] .score-banner { border-color: #1a1a1a; }
+[data-theme="light"] .score-big { color: #1a1a1a; }
+[data-theme="light"] .hl-yellow { color: #996d00; }
+[data-theme="light"] .eyebrow { color: #996d00; }
+[data-theme="light"] .nav-dot.active { background: #1a1a1a; border-color: #1a1a1a; box-shadow: 0 0 8px rgba(0,0,0,.2); }
+[data-theme="light"] .progress-fill { background: #1a1a1a; }
+
+/* ── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .values-strip { grid-template-columns: repeat(3, 1fr); }
+  .match-columns { grid-template-columns: 1fr; }
+  .header { padding: 10px 16px; }
+  main { padding: 32px 16px 100px; }
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<header class="header">
+  <div class="header-left">
+    <div class="hc-logo">
+      <div class="hc-logo-mark">
+        HC
+        <span class="hc-logo-bolt"><i class="fa-solid fa-bolt"></i></span>
+      </div>
+      <div class="hc-logo-text">
+        <span>Hilscher-Clarke</span>
+        Electric Company
+      </div>
+    </div>
+  </div>
+  <div class="header-center">
+    <div class="progress-label">
+      <span>PROGRESS</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressBar"></div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="nav-dots" id="navDots"></div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode" title="Toggle light/dark mode"><i class="fa-solid fa-sun"></i></button>
+  </div>
+</header>
+
+<!-- ═══════════════════════ SCREENS ═══════════════════════ -->
+<main id="main">
+
+<!-- ──── SCREEN 0: HERO ──── -->
+<section class="screen active" data-screen="0">
+  <div class="eyebrow">First-Year Onboarding</div>
+  <h1>Welcome to<br><span class="hl-yellow">Hilscher-Clarke</span></h1>
+  <p class="section-sub">For over 100 years, we've powered progress with integrity. This module introduces you to our company, our values, and what it means to be part of the HC family.</p>
+  <div class="callout callout-yellow">
+    <div class="callout-title"><i class="fa-solid fa-circle-info"></i> What You'll Learn</div>
+    This module covers our history, core values (FIRST THINGS FIRST), organizational structure, safety culture, and your role in the HC mission. Estimated time: 15 minutes.
+  </div>
+</section>
+
+<!-- ──── SCREEN 1: OUR STORY ──── -->
+<section class="screen" data-screen="1">
+  <div class="screen-label">Screen 1 of 8</div>
+  <h2>A Century of <span class="hl-yellow">Leadership</span></h2>
+  <p>Since 1916, Hilscher-Clarke Electric Company has set the standard in electrical contracting. What started as State Electric has grown into a multi-state operation serving commercial, industrial, specialty, and residential customers.</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-year">1916</div>
+      <div class="timeline-text">State Electric becomes a member of the National Electrical Contractors Association (NECA).</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">1926</div>
+      <div class="timeline-text">Walt Hilscher and Roy Clarke purchase State Electric, renaming it Hilscher-Clarke Electric Company.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">1945</div>
+      <div class="timeline-text">Hilscher-Clarke Electric Company is incorporated.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2020s</div>
+      <div class="timeline-text">Expansion into Columbus, Florida, and launch of HC Energy, HC Forestry, and HC Manufacturing divisions.</div>
+    </div>
+  </div>
+
+  <div class="callout callout-yellow">
+    <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> Key Fact</div>
+    Today, Hilscher-Clarke serves 17 core markets across 4 business categories, with offices throughout Ohio, Pennsylvania, West Virginia, and Florida.
+  </div>
+</section>
+
+<!-- ──── SCREEN 2: CORE VALUES ──── -->
+<section class="screen" data-screen="2">
+  <div class="screen-label">Screen 2 of 8</div>
+  <h2><span class="hl-red">First Things First</span></h2>
+  <p>At our core, Hilscher-Clarke lives to do "FIRST THINGS FIRST." These five values shape everything we do — from how we treat each other to how we serve our customers.</p>
+
+  <div class="values-strip">
+    <div class="v-item">
+      <div class="v-item-letter">F</div>
+      <div class="v-item-word">Faith</div>
+      <div class="v-item-desc">Historical root, current foundation, future compass</div>
+    </div>
+    <div class="v-item">
+      <div class="v-item-letter">I</div>
+      <div class="v-item-word">Integrity</div>
+      <div class="v-item-desc">Doing the right thing</div>
+    </div>
+    <div class="v-item">
+      <div class="v-item-letter">R</div>
+      <div class="v-item-word">Respect</div>
+      <div class="v-item-desc">Humble consideration</div>
+    </div>
+    <div class="v-item">
+      <div class="v-item-letter">S</div>
+      <div class="v-item-word">Selfless</div>
+      <div class="v-item-desc">Eliminating self-preservation</div>
+    </div>
+    <div class="v-item">
+      <div class="v-item-letter">T</div>
+      <div class="v-item-word">Team</div>
+      <div class="v-item-desc">Sharing strengths to achieve common goals</div>
+    </div>
+  </div>
+
+  <div class="callout callout-red">
+    <div class="callout-title"><i class="fa-solid fa-bookmark"></i> Remember</div>
+    These aren't just words on a wall. Every decision you make — from how you greet a coworker to how you handle a challenge on-site — should reflect FIRST THINGS FIRST.
+  </div>
+</section>
+
+<!-- ──── SCREEN 3: OUR SERVICES ──── -->
+<section class="screen" data-screen="3">
+  <div class="screen-label">Screen 3 of 8</div>
+  <h2>What We <span class="hl-yellow">Do</span></h2>
+  <p>We're one of the rare electrical contractors that perform a full range of services — from testing and data to design and engineering — functions typically handled by subcontractors.</p>
+
+  <div class="card-grid">
+    <div class="info-card">
+      <div class="info-card-icon ic-yellow"><i class="fa-solid fa-building"></i></div>
+      <div class="info-card-title">Commercial</div>
+      <div class="info-card-text">Healthcare, education, data centers, retail, and mixed-use construction projects across the region.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon"><i class="fa-solid fa-industry"></i></div>
+      <div class="info-card-title">Industrial</div>
+      <div class="info-card-text">Manufacturing plants, oil & gas, steel, food processing — complex installations requiring precision and power.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon ic-red"><i class="fa-solid fa-bolt"></i></div>
+      <div class="info-card-title c-red">Specialty</div>
+      <div class="info-card-text">Advanced testing, automation, BIM, control panels, design-build, and engineering services.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon ic-green"><i class="fa-solid fa-house"></i></div>
+      <div class="info-card-title c-green">Residential</div>
+      <div class="info-card-text">Full electrical service for homes across Ohio and Florida, backed by 100+ years of expertise.</div>
+    </div>
+  </div>
+
+  <div class="callout callout-green">
+    <div class="callout-title"><i class="fa-solid fa-arrow-trend-up"></i> New Divisions</div>
+    HC Energy (Transmission & Distribution), HC Forestry, and HC Manufacturing represent our latest areas of growth — bringing new career paths and opportunities.
+  </div>
+</section>
+
+<!-- ──── SCREEN 4: SAFETY ──── -->
+<section class="screen" data-screen="4">
+  <div class="screen-label">Screen 4 of 8</div>
+  <h2>Safety Is <span class="hl-red">Non-Negotiable</span></h2>
+  <p>In the electrical industry, safety isn't a policy — it's a way of life. Every person on every jobsite is responsible for maintaining the highest standards of safety for themselves and their team.</p>
+
+  <div class="card-grid">
+    <div class="info-card">
+      <div class="info-card-icon ic-red"><i class="fa-solid fa-shield-halved"></i></div>
+      <div class="info-card-title c-red">Stop Work Authority</div>
+      <div class="info-card-text">Every employee has the right — and the obligation — to stop work if they see an unsafe condition. No exceptions, no retaliation.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon ic-yellow"><i class="fa-solid fa-hard-hat"></i></div>
+      <div class="info-card-title">PPE Requirements</div>
+      <div class="info-card-text">Hard hats, safety glasses, arc-rated clothing, gloves, and appropriate footwear are required on every jobsite.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+      <div class="info-card-title">Daily Briefings</div>
+      <div class="info-card-text">Every crew starts with a safety briefing covering the day's hazards, tasks, and emergency procedures.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon ic-red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <div class="info-card-title c-red">Incident Reporting</div>
+      <div class="info-card-text">All incidents, near-misses, and unsafe conditions must be reported immediately. Early reporting prevents future injuries.</div>
+    </div>
+  </div>
+
+  <div class="callout callout-red">
+    <div class="callout-title"><i class="fa-solid fa-heart-pulse"></i> Safety Culture</div>
+    Our Corporate Safety Director and safety teams maintain incident rates well below the national average. Your awareness and participation keep that record strong.
+  </div>
+</section>
+
+<!-- ──── SCREEN 5: YOUR TEAM ──── -->
+<section class="screen" data-screen="5">
+  <div class="screen-label">Screen 5 of 8</div>
+  <h2>Your <span class="hl-yellow">Team</span></h2>
+  <p>Hilscher-Clarke operates through several offices and divisions. Here's how the organization supports your work and development.</p>
+
+  <div class="card-grid">
+    <div class="info-card">
+      <div class="info-card-icon"><i class="fa-solid fa-user-tie"></i></div>
+      <div class="info-card-title">Executive Leadership</div>
+      <div class="info-card-text">Chairman/CEO, President/COO, CFO, and Senior Vice Presidents set the strategic direction and values that guide everything we do.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon ic-yellow"><i class="fa-solid fa-map-location-dot"></i></div>
+      <div class="info-card-title">Branch Operations</div>
+      <div class="info-card-text">Canton, Akron, Columbus, Coshocton, Tri-State, and Fort Myers — each led by a Branch Manager who oversees local projects and teams.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon ic-green"><i class="fa-solid fa-users"></i></div>
+      <div class="info-card-title c-green">HR & Shared Services</div>
+      <div class="info-card-text">Your HR Director and SVP of Shared Services are your go-to resources for questions about benefits, training, policies, and professional development.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon"><i class="fa-solid fa-gears"></i></div>
+      <div class="info-card-title">Field Operations</div>
+      <div class="info-card-text">Directors of Field Operations manage the day-to-day coordination of electricians, superintendents, and project teams across all divisions.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ──── SCREEN 6: MATCHING GAME ──── -->
+<section class="screen" data-screen="6">
+  <div class="screen-label">Screen 6 of 8</div>
+  <h2><span class="hl-yellow">Match</span> the Values</h2>
+  <p>Test your knowledge of FIRST THINGS FIRST. Click a value on the left, then click its matching definition on the right. Match all five to continue.</p>
+
+  <div class="match-game" id="matchGame">
+    <div class="match-columns">
+      <div>
+        <div class="match-col-title"><i class="fa-solid fa-tag"></i> Values</div>
+        <div id="matchValues"></div>
+      </div>
+      <div>
+        <div class="match-col-title"><i class="fa-solid fa-quote-right"></i> Definitions</div>
+        <div id="matchDefs"></div>
+      </div>
+    </div>
+    <div class="match-score-bar">
+      <span class="match-count" id="matchCount">0</span> / 5 matched
+    </div>
+  </div>
+
+  <div class="callout callout-yellow" id="matchComplete" style="display:none;">
+    <div class="callout-title"><i class="fa-solid fa-circle-check"></i> All Matched!</div>
+    Great job — you know the FIRST THINGS FIRST values. Click Continue to proceed to the knowledge check.
+  </div>
+</section>
+
+<!-- ──── SCREEN 7: KNOWLEDGE CHECK ──── -->
+<section class="screen" data-screen="7">
+  <div class="screen-label">Screen 7 of 8</div>
+  <h2>Knowledge <span class="hl-yellow">Check</span></h2>
+  <p>Let's see what you've learned. Select the best answer for each question — you'll get instant feedback. You need 75% or higher to pass.</p>
+
+  <div class="quiz-block" id="quizBlock">
+    <div class="quiz-q" data-q="0">
+      <div class="quiz-q-label">Question 1 of 4</div>
+      <div class="quiz-q-text">What year was Hilscher-Clarke Electric Company originally founded (as State Electric)?</div>
+      <div class="quiz-opts">
+        <div class="quiz-opt" data-opt="0" onclick="selectOpt(0,0)"><span class="quiz-opt-letter">A</span> 1926</div>
+        <div class="quiz-opt" data-opt="1" onclick="selectOpt(0,1)"><span class="quiz-opt-letter">B</span> 1912</div>
+        <div class="quiz-opt" data-opt="2" onclick="selectOpt(0,2)"><span class="quiz-opt-letter">C</span> 1916</div>
+        <div class="quiz-opt" data-opt="3" onclick="selectOpt(0,3)"><span class="quiz-opt-letter">D</span> 1945</div>
+      </div>
+      <div class="quiz-feedback" id="fb0"></div>
+    </div>
+    <div class="quiz-q" data-q="1">
+      <div class="quiz-q-label">Question 2 of 4</div>
+      <div class="quiz-q-text">What does FIRST stand for in "First Things First"?</div>
+      <div class="quiz-opts">
+        <div class="quiz-opt" data-opt="0" onclick="selectOpt(1,0)"><span class="quiz-opt-letter">A</span> Focus, Innovation, Results, Speed, Technology</div>
+        <div class="quiz-opt" data-opt="1" onclick="selectOpt(1,1)"><span class="quiz-opt-letter">B</span> Faith, Integrity, Respect, Selfless, Team</div>
+        <div class="quiz-opt" data-opt="2" onclick="selectOpt(1,2)"><span class="quiz-opt-letter">C</span> Fast, Intelligent, Reliable, Safe, Trusted</div>
+        <div class="quiz-opt" data-opt="3" onclick="selectOpt(1,3)"><span class="quiz-opt-letter">D</span> Friendly, Inclusive, Responsible, Skilled, Thorough</div>
+      </div>
+      <div class="quiz-feedback" id="fb1"></div>
+    </div>
+    <div class="quiz-q" data-q="2">
+      <div class="quiz-q-label">Question 3 of 4</div>
+      <div class="quiz-q-text">Which of the following is TRUE about Stop Work Authority?</div>
+      <div class="quiz-opts">
+        <div class="quiz-opt" data-opt="0" onclick="selectOpt(2,0)"><span class="quiz-opt-letter">A</span> Only supervisors can stop work for safety reasons</div>
+        <div class="quiz-opt" data-opt="1" onclick="selectOpt(2,1)"><span class="quiz-opt-letter">B</span> Every employee has the right and obligation to stop unsafe work</div>
+        <div class="quiz-opt" data-opt="2" onclick="selectOpt(2,2)"><span class="quiz-opt-letter">C</span> Stop Work Authority only applies to industrial jobsites</div>
+        <div class="quiz-opt" data-opt="3" onclick="selectOpt(2,3)"><span class="quiz-opt-letter">D</span> Stopping work requires written approval from the Safety Director</div>
+      </div>
+      <div class="quiz-feedback" id="fb2"></div>
+    </div>
+    <div class="quiz-q" data-q="3">
+      <div class="quiz-q-label">Question 4 of 4</div>
+      <div class="quiz-q-text">How many core markets does Hilscher-Clarke currently serve?</div>
+      <div class="quiz-opts">
+        <div class="quiz-opt" data-opt="0" onclick="selectOpt(3,0)"><span class="quiz-opt-letter">A</span> 4</div>
+        <div class="quiz-opt" data-opt="1" onclick="selectOpt(3,1)"><span class="quiz-opt-letter">B</span> 10</div>
+        <div class="quiz-opt" data-opt="2" onclick="selectOpt(3,2)"><span class="quiz-opt-letter">C</span> 17</div>
+        <div class="quiz-opt" data-opt="3" onclick="selectOpt(3,3)"><span class="quiz-opt-letter">D</span> 25</div>
+      </div>
+      <div class="quiz-feedback" id="fb3"></div>
+    </div>
+  </div>
+
+  <!-- No submit button — immediate feedback per question -->
+</section>
+
+<!-- ──── SCREEN 8: COMPLETION ──── -->
+<section class="screen" data-screen="8">
+  <div class="screen-label">Screen 8 of 8</div>
+  <h2>Module <span class="hl-yellow">Complete</span></h2>
+
+  <div class="score-banner">
+    <div class="score-big" id="finalScore">—</div>
+    <div class="score-label">Your Score</div>
+    <div class="score-status" id="finalStatus"></div>
+  </div>
+
+  <div id="completionMsg"></div>
+
+  <div class="callout callout-yellow">
+    <div class="callout-title"><i class="fa-solid fa-arrow-right"></i> Next Steps</div>
+    Continue with your onboarding checklist. Your supervisor and HR will guide you through the remaining orientation activities, safety training, and role-specific certifications.
+  </div>
+
+  <p style="text-align:center; margin-top:24px; color:var(--hc-text-sec); font-size:14px;">
+    <strong style="color:var(--hc-yellow);">FIRST THINGS FIRST</strong> — Welcome to the HC family.
+  </p>
+</section>
+
+</main>
+
+<!-- ═══════════════════════ FOOTER NAV ═══════════════════════ -->
+<div class="footer-nav">
+  <button class="btn-secondary" id="btnPrev" onclick="navigate(-1)" style="visibility:hidden;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+  <button class="btn-primary" id="btnNext" onclick="navigate(1)">Get Started <i class="fa-solid fa-bolt"></i></button>
+</div>
+
+<!-- ═══════════════════════ SCRIPT ═══════════════════════ -->
+<script>
+/* ── Theme Toggle ────────────────────────────────────────────── */
+function toggleTheme() {
+  var html = document.documentElement;
+  var current = html.getAttribute('data-theme');
+  var next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  document.getElementById('themeToggle').innerHTML = next === 'dark' ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+  try { localStorage.setItem('hc_theme', next); } catch(e) {}
+}
+(function initTheme() {
+  try {
+    var saved = localStorage.getItem('hc_theme');
+    if (saved === 'light' || saved === 'dark') {
+      document.documentElement.setAttribute('data-theme', saved);
+      var btn = document.getElementById('themeToggle');
+      if (btn) btn.innerHTML = saved === 'dark' ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+    }
+  } catch(e) {}
+})();
+
+var TOTAL_SCREENS = 9;
+var currentScreen = 0;
+var visited = [];
+for (var i = 0; i < TOTAL_SCREENS; i++) visited.push(false);
+visited[0] = true;
+
+// Quiz answers: correct option index per question
+var QUIZ_ANSWERS = [2, 1, 1, 2]; // C, B, B, C
+var quizSelections = [-1, -1, -1, -1];
+var quizSubmitted = false;
+var quizScore = 0;
+
+// Matching game state
+var matchData = [
+  { letter: 'F', value: 'Faith', def: 'Historical root, current foundation, future compass' },
+  { letter: 'I', value: 'Integrity', def: 'Doing the right thing' },
+  { letter: 'R', value: 'Respect', def: 'Humble consideration' },
+  { letter: 'S', value: 'Selfless', def: 'Eliminating self-preservation' },
+  { letter: 'T', value: 'Team', def: 'Sharing strengths to achieve common goals' }
+];
+var matchSelected = -1; // which value is selected (-1 = none)
+var matchPairs = {};     // { valueIdx: defIdx } for completed matches
+var matchComplete = false;
+var shuffledDefs = [];
+
+/* ── Initialize Matching Game ────────────────────────────────── */
+function initMatchGame() {
+  // Shuffle definitions
+  shuffledDefs = matchData.map(function(d, i) { return { idx: i, def: d.def }; });
+  for (var i = shuffledDefs.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = shuffledDefs[i]; shuffledDefs[i] = shuffledDefs[j]; shuffledDefs[j] = tmp;
+  }
+  renderMatchGame();
+}
+
+function renderMatchGame() {
+  var valContainer = document.getElementById('matchValues');
+  var defContainer = document.getElementById('matchDefs');
+  if (!valContainer || !defContainer) return;
+
+  valContainer.innerHTML = '';
+  defContainer.innerHTML = '';
+
+  for (var i = 0; i < matchData.length; i++) {
+    var vEl = document.createElement('div');
+    vEl.className = 'match-item';
+    vEl.setAttribute('data-vidx', i);
+    if (matchPairs[i] !== undefined) vEl.classList.add('matched');
+    else if (matchSelected === i) vEl.classList.add('selected');
+    vEl.innerHTML = '<span class="match-letter">' + matchData[i].letter + '</span> ' + matchData[i].value;
+    if (matchPairs[i] === undefined) {
+      vEl.onclick = (function(idx) { return function() { clickValue(idx); }; })(i);
+    }
+    valContainer.appendChild(vEl);
+  }
+
+  for (var j = 0; j < shuffledDefs.length; j++) {
+    var dEl = document.createElement('div');
+    dEl.className = 'match-item';
+    dEl.setAttribute('data-didx', j);
+    var isMatched = false;
+    for (var k in matchPairs) { if (matchPairs[k] === shuffledDefs[j].idx) { isMatched = true; break; } }
+    if (isMatched) dEl.classList.add('matched');
+    dEl.innerHTML = '<span class="match-def-num">' + (j + 1) + '</span> ' + shuffledDefs[j].def;
+    if (!isMatched) {
+      dEl.onclick = (function(jj) { return function() { clickDef(jj); }; })(j);
+    }
+    defContainer.appendChild(dEl);
+  }
+
+  var matched = Object.keys(matchPairs).length;
+  document.getElementById('matchCount').textContent = matched;
+
+  if (matched === 5 && !matchComplete) {
+    matchComplete = true;
+    document.getElementById('matchComplete').style.display = '';
+    // Enable continue button
+    var next = document.getElementById('btnNext');
+    next.style.display = '';
+    next.innerHTML = 'Continue <i class="fa-solid fa-arrow-right"></i>';
+  }
+}
+
+function clickValue(idx) {
+  if (matchPairs[idx] !== undefined) return;
+  matchSelected = idx;
+  renderMatchGame();
+}
+
+function clickDef(shuffledIdx) {
+  if (matchSelected === -1) return;
+  var correctDefIdx = matchSelected; // matchData[matchSelected] should match shuffledDefs[shuffledIdx].idx
+  if (shuffledDefs[shuffledIdx].idx === matchSelected) {
+    // Correct match!
+    matchPairs[matchSelected] = shuffledDefs[shuffledIdx].idx;
+    matchSelected = -1;
+    renderMatchGame();
+  } else {
+    // Wrong match — shake the def
+    matchSelected = -1;
+    renderMatchGame();
+    var defItems = document.querySelectorAll('#matchDefs .match-item');
+    defItems[shuffledIdx].classList.add('wrong');
+    setTimeout(function() { defItems[shuffledIdx].classList.remove('wrong'); }, 500);
+  }
+}
+
+initMatchGame();
+
+/* ── Initialize SCORM ────────────────────────────────────────── */
+SCORM.initialize();
+var saved = SCORM.loadProgress();
+if (saved) {
+  currentScreen = saved.screen || 0;
+  if (saved.visited) visited = saved.visited;
+  if (saved.quizSelections) quizSelections = saved.quizSelections;
+  if (saved.quizSubmitted) {
+    quizSubmitted = true;
+    quizScore = saved.quizScore || 0;
+  }
+  if (saved.matchComplete) {
+    matchComplete = true;
+    // Rebuild matchPairs for all 5
+    matchPairs = {0:0, 1:1, 2:2, 3:3, 4:4};
+    renderMatchGame();
+  }
+}
+
+renderDots();
+goToScreen(currentScreen);
+if (quizSubmitted) restoreQuiz();
+
+/* ── Navigation ──────────────────────────────────────────────── */
+function navigate(dir) {
+  var next = currentScreen + dir;
+  if (next < 0 || next >= TOTAL_SCREENS) return;
+  goToScreen(next);
+}
+
+function goToScreen(idx) {
+  if (idx < 0 || idx >= TOTAL_SCREENS) return;
+  currentScreen = idx;
+  visited[idx] = true;
+  var screens = document.querySelectorAll('.screen');
+  for (var i = 0; i < screens.length; i++) {
+    screens[i].classList.toggle('active', i === idx);
+  }
+  updateProgress();
+  updateNav();
+  saveState();
+  window.scrollTo(0, 0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+  var mainEl = document.getElementById('main');
+  if (mainEl) mainEl.scrollTop = 0;
+}
+
+function updateNav() {
+  var prev = document.getElementById('btnPrev');
+  var next = document.getElementById('btnNext');
+  prev.style.visibility = currentScreen > 0 ? 'visible' : 'hidden';
+
+  if (currentScreen === 0) {
+    next.innerHTML = 'Get Started <i class="fa-solid fa-bolt"></i>';
+    next.style.display = '';
+  } else if (currentScreen === TOTAL_SCREENS - 1) {
+    next.style.display = 'none';
+  } else if (currentScreen === 6 && !matchComplete) {
+    next.style.display = 'none';
+  } else if (currentScreen === 7 && !quizSubmitted) {
+    next.style.display = 'none';
+  } else {
+    next.style.display = '';
+    next.innerHTML = 'Continue <i class="fa-solid fa-arrow-right"></i>';
+  }
+}
+
+function updateProgress() {
+  var count = 0;
+  for (var i = 0; i < visited.length; i++) if (visited[i]) count++;
+  var pct = Math.round((count / TOTAL_SCREENS) * 100);
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressBar').style.width = pct + '%';
+  renderDots();
+}
+
+function renderDots() {
+  var container = document.getElementById('navDots');
+  container.innerHTML = '';
+  for (var i = 0; i < TOTAL_SCREENS; i++) {
+    var dot = document.createElement('button');
+    dot.className = 'nav-dot';
+    dot.setAttribute('aria-label', 'Screen ' + (i + 1));
+    if (i === currentScreen) dot.classList.add('active');
+    else if (visited[i]) dot.classList.add('done');
+    dot.setAttribute('data-idx', i);
+    dot.onclick = function() { goToScreen(parseInt(this.getAttribute('data-idx'))); };
+    container.appendChild(dot);
+  }
+}
+
+/* ── Quiz Logic (Immediate Feedback) ─────────────────────────── */
+var quizLocked = [false, false, false, false]; // track which questions are locked
+
+function selectOpt(qIdx, optIdx) {
+  if (quizLocked[qIdx]) return; // already answered
+  quizLocked[qIdx] = true;
+  quizSelections[qIdx] = optIdx;
+
+  var q = document.querySelectorAll('.quiz-q')[qIdx];
+  var opts = q.querySelectorAll('.quiz-opt');
+  var fb = document.getElementById('fb' + qIdx);
+  var isCorrect = (optIdx === QUIZ_ANSWERS[qIdx]);
+
+  // Style all options: lock them, highlight correct, mark wrong
+  for (var j = 0; j < opts.length; j++) {
+    opts[j].style.pointerEvents = 'none';
+    if (j === QUIZ_ANSWERS[qIdx]) opts[j].classList.add('correct');
+    else if (j === optIdx && !isCorrect) opts[j].classList.add('incorrect');
+  }
+
+  // Show feedback
+  if (isCorrect) {
+    fb.innerHTML = '<i class="fa-solid fa-check"></i> Correct!';
+    fb.className = 'quiz-feedback show pass';
+  } else {
+    var letters = ['A','B','C','D'];
+    fb.innerHTML = '<i class="fa-solid fa-xmark"></i> The correct answer is ' + letters[QUIZ_ANSWERS[qIdx]] + '.';
+    fb.className = 'quiz-feedback show fail';
+  }
+
+  // Record interaction
+  SCORM.recordInteraction('q' + qIdx, String(optIdx), isCorrect ? 'correct' : 'wrong', 1);
+
+  // Check if all questions answered
+  var allAnswered = true;
+  for (var k = 0; k < quizLocked.length; k++) {
+    if (!quizLocked[k]) { allAnswered = false; break; }
+  }
+
+  if (allAnswered) finalizeQuiz();
+  saveState();
+}
+
+function finalizeQuiz() {
+  quizSubmitted = true;
+  var correct = 0;
+  for (var i = 0; i < QUIZ_ANSWERS.length; i++) {
+    if (quizSelections[i] === QUIZ_ANSWERS[i]) correct++;
+  }
+  quizScore = Math.round((correct / QUIZ_ANSWERS.length) * 100);
+
+  // Show continue button
+  var next = document.getElementById('btnNext');
+  next.style.display = '';
+  next.innerHTML = 'See Results <i class="fa-solid fa-arrow-right"></i>';
+
+  // Populate completion screen
+  document.getElementById('finalScore').textContent = quizScore + '%';
+  var statusEl = document.getElementById('finalStatus');
+  var msgEl = document.getElementById('completionMsg');
+  if (quizScore >= 75) {
+    statusEl.textContent = 'PASSED';
+    statusEl.className = 'score-status pass';
+    msgEl.innerHTML = '<p style="text-align:center; font-size:17px;">Great work! You\'ve demonstrated a solid understanding of Hilscher-Clarke\'s history, values, and safety expectations.</p>';
+    SCORM.setScore(quizScore, 75);
+  } else {
+    statusEl.textContent = 'NOT YET — TRY AGAIN';
+    statusEl.className = 'score-status fail';
+    msgEl.innerHTML = '<p style="text-align:center; font-size:17px;">You need 75% to pass. Review the material and try again, or reach out to your supervisor for support.</p>';
+    SCORM.setScore(quizScore, 75);
+  }
+  saveState();
+}
+
+function restoreQuiz() {
+  for (var i = 0; i < quizSelections.length; i++) {
+    if (quizSelections[i] === -1) continue;
+    quizLocked[i] = true;
+    var q = document.querySelectorAll('.quiz-q')[i];
+    var opts = q.querySelectorAll('.quiz-opt');
+    var fb = document.getElementById('fb' + i);
+    for (var j = 0; j < opts.length; j++) {
+      opts[j].style.pointerEvents = 'none';
+      if (j === QUIZ_ANSWERS[i]) opts[j].classList.add('correct');
+      else if (j === quizSelections[i] && j !== QUIZ_ANSWERS[i]) opts[j].classList.add('incorrect');
+    }
+    if (quizSelections[i] === QUIZ_ANSWERS[i]) {
+      fb.innerHTML = '<i class="fa-solid fa-check"></i> Correct!';
+      fb.className = 'quiz-feedback show pass';
+    } else {
+      var letters = ['A','B','C','D'];
+      fb.innerHTML = '<i class="fa-solid fa-xmark"></i> The correct answer is ' + letters[QUIZ_ANSWERS[i]] + '.';
+      fb.className = 'quiz-feedback show fail';
+    }
+  }
+  document.getElementById('finalScore').textContent = quizScore + '%';
+  var statusEl = document.getElementById('finalStatus');
+  if (quizScore >= 75) {
+    statusEl.textContent = 'PASSED'; statusEl.className = 'score-status pass';
+  } else {
+    statusEl.textContent = 'NOT YET — TRY AGAIN'; statusEl.className = 'score-status fail';
+  }
+}
+
+/* ── Persistence ─────────────────────────────────────────────── */
+function saveState() {
+  SCORM.saveProgress({
+    screen: currentScreen,
+    visited: visited,
+    quizSelections: quizSelections,
+    quizSubmitted: quizSubmitted,
+    quizScore: quizScore,
+    matchComplete: matchComplete
+  });
+}
+
+/* ── Auto-complete on close ──────────────────────────────────── */
+window.addEventListener('beforeunload', function() {
+  if (!SCORM._isFinished()) {
+    saveState();
+    if (quizSubmitted && quizScore >= 75) {
+      SCORM.setStatus('passed');
+    } else {
+      var allVisited = true;
+      for (var i = 0; i < visited.length; i++) if (!visited[i]) { allVisited = false; break; }
+      if (allVisited && !quizSubmitted) SCORM.setStatus('incomplete');
+    }
+    SCORM.setValue("cmi.core.exit", quizSubmitted && quizScore >= 75 ? "" : "suspend");
+    SCORM.finish();
+  }
+});
+</script>
+</body>
+</html>
