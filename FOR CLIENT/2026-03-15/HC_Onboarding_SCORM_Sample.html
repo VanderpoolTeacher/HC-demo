@@ -927,6 +927,7 @@ visited[0] = true;
 // Quiz answers: correct option index per question
 var QUIZ_ANSWERS = [2, 1, 1, 2]; // C, B, B, C
 var quizSelections = [-1, -1, -1, -1];
+var quizLocked = [false, false, false, false];
 var quizSubmitted = false;
 var quizScore = 0;
 
@@ -1028,6 +1029,17 @@ function clickDef(shuffledIdx) {
 
 initMatchGame();
 
+/* ── Clear stale localStorage from previous versions ─────────── */
+try {
+  var _LS_VER_KEY = 'hc_scorm_version';
+  var _CURRENT_VER = '2';
+  if (localStorage.getItem(_LS_VER_KEY) !== _CURRENT_VER) {
+    localStorage.removeItem('scorm_hc_onboarding_sample');
+    localStorage.setItem(_LS_VER_KEY, _CURRENT_VER);
+    console.log('Cleared stale SCORM data from previous version.');
+  }
+} catch(e) {}
+
 /* ── Initialize SCORM ────────────────────────────────────────── */
 try {
   SCORM.initialize();
@@ -1123,8 +1135,6 @@ function renderDots() {
 }
 
 /* ── Quiz Logic (Immediate Feedback) ─────────────────────────── */
-var quizLocked = [false, false, false, false]; // track which questions are locked
-
 function selectOpt(qIdx, optIdx) {
   try {
     if (quizLocked[qIdx]) return; // already answered
