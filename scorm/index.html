@@ -1029,23 +1029,25 @@ function clickDef(shuffledIdx) {
 initMatchGame();
 
 /* ── Initialize SCORM ────────────────────────────────────────── */
-SCORM.initialize();
-var saved = SCORM.loadProgress();
-if (saved) {
-  currentScreen = saved.screen || 0;
-  if (saved.visited) visited = saved.visited;
-  if (saved.quizSelections) quizSelections = saved.quizSelections;
-  if (saved.quizSubmitted) {
-    quizSubmitted = true;
-    quizScore = saved.quizScore || 0;
+try {
+  SCORM.initialize();
+  var saved = SCORM.loadProgress();
+  if (saved) {
+    currentScreen = saved.screen || 0;
+    if (saved.visited) visited = saved.visited;
+    if (saved.quizSelections) quizSelections = saved.quizSelections;
+    if (saved.quizLocked) quizLocked = saved.quizLocked;
+    if (saved.quizSubmitted) {
+      quizSubmitted = true;
+      quizScore = saved.quizScore || 0;
+    }
+    if (saved.matchComplete) {
+      matchComplete = true;
+      matchPairs = {0:0, 1:1, 2:2, 3:3, 4:4};
+      renderMatchGame();
+    }
   }
-  if (saved.matchComplete) {
-    matchComplete = true;
-    // Rebuild matchPairs for all 5
-    matchPairs = {0:0, 1:1, 2:2, 3:3, 4:4};
-    renderMatchGame();
-  }
-}
+} catch(e) { console.error('SCORM init error:', e); }
 
 renderDots();
 goToScreen(currentScreen);
@@ -1124,74 +1126,83 @@ function renderDots() {
 var quizLocked = [false, false, false, false]; // track which questions are locked
 
 function selectOpt(qIdx, optIdx) {
-  if (quizLocked[qIdx]) return; // already answered
-  quizLocked[qIdx] = true;
-  quizSelections[qIdx] = optIdx;
+  try {
+    if (quizLocked[qIdx]) return; // already answered
+    quizLocked[qIdx] = true;
+    quizSelections[qIdx] = optIdx;
 
-  var q = document.querySelectorAll('.quiz-q')[qIdx];
-  var opts = q.querySelectorAll('.quiz-opt');
-  var fb = document.getElementById('fb' + qIdx);
-  var isCorrect = (optIdx === QUIZ_ANSWERS[qIdx]);
+    var q = document.querySelectorAll('.quiz-q')[qIdx];
+    var opts = q.querySelectorAll('.quiz-opt');
+    var fb = document.getElementById('fb' + qIdx);
+    var isCorrect = (optIdx === QUIZ_ANSWERS[qIdx]);
 
-  // Style all options: lock them, highlight correct, mark wrong
-  for (var j = 0; j < opts.length; j++) {
-    opts[j].style.pointerEvents = 'none';
-    if (j === QUIZ_ANSWERS[qIdx]) opts[j].classList.add('correct');
-    else if (j === optIdx && !isCorrect) opts[j].classList.add('incorrect');
+    // Style all options: lock them, highlight correct, mark wrong
+    for (var j = 0; j < opts.length; j++) {
+      opts[j].style.pointerEvents = 'none';
+      if (j === QUIZ_ANSWERS[qIdx]) opts[j].classList.add('correct');
+      else if (j === optIdx && !isCorrect) opts[j].classList.add('incorrect');
+    }
+
+    // Show feedback
+    if (isCorrect) {
+      fb.innerHTML = '<i class="fa-solid fa-check"></i> Correct!';
+      fb.className = 'quiz-feedback show pass';
+    } else {
+      var letters = ['A','B','C','D'];
+      fb.innerHTML = '<i class="fa-solid fa-xmark"></i> The correct answer is ' + letters[QUIZ_ANSWERS[qIdx]] + '.';
+      fb.className = 'quiz-feedback show fail';
+    }
+
+    // Record interaction (non-critical, don't let it break quiz)
+    try { SCORM.recordInteraction('q' + qIdx, String(optIdx), isCorrect ? 'correct' : 'wrong', 1); } catch(e2) {}
+
+    // Check if all questions answered
+    var allAnswered = true;
+    for (var k = 0; k < quizLocked.length; k++) {
+      if (!quizLocked[k]) { allAnswered = false; break; }
+    }
+
+    if (allAnswered) finalizeQuiz();
+    saveState();
+  } catch(e) {
+    console.error('selectOpt error:', e);
   }
-
-  // Show feedback
-  if (isCorrect) {
-    fb.innerHTML = '<i class="fa-solid fa-check"></i> Correct!';
-    fb.className = 'quiz-feedback show pass';
-  } else {
-    var letters = ['A','B','C','D'];
-    fb.innerHTML = '<i class="fa-solid fa-xmark"></i> The correct answer is ' + letters[QUIZ_ANSWERS[qIdx]] + '.';
-    fb.className = 'quiz-feedback show fail';
-  }
-
-  // Record interaction
-  SCORM.recordInteraction('q' + qIdx, String(optIdx), isCorrect ? 'correct' : 'wrong', 1);
-
-  // Check if all questions answered
-  var allAnswered = true;
-  for (var k = 0; k < quizLocked.length; k++) {
-    if (!quizLocked[k]) { allAnswered = false; break; }
-  }
-
-  if (allAnswered) finalizeQuiz();
-  saveState();
 }
 
 function finalizeQuiz() {
-  quizSubmitted = true;
-  var correct = 0;
-  for (var i = 0; i < QUIZ_ANSWERS.length; i++) {
-    if (quizSelections[i] === QUIZ_ANSWERS[i]) correct++;
-  }
-  quizScore = Math.round((correct / QUIZ_ANSWERS.length) * 100);
+  try {
+    quizSubmitted = true;
+    var correct = 0;
+    for (var i = 0; i < QUIZ_ANSWERS.length; i++) {
+      if (quizSelections[i] === QUIZ_ANSWERS[i]) correct++;
+    }
+    quizScore = Math.round((correct / QUIZ_ANSWERS.length) * 100);
 
-  // Show continue button
-  var next = document.getElementById('btnNext');
-  next.style.display = '';
-  next.innerHTML = 'See Results <i class="fa-solid fa-arrow-right"></i>';
+    // Show continue button
+    var next = document.getElementById('btnNext');
+    next.style.display = '';
+    next.innerHTML = 'See Results <i class="fa-solid fa-arrow-right"></i>';
 
-  // Populate completion screen
-  document.getElementById('finalScore').textContent = quizScore + '%';
-  var statusEl = document.getElementById('finalStatus');
-  var msgEl = document.getElementById('completionMsg');
-  if (quizScore >= 75) {
-    statusEl.textContent = 'PASSED';
-    statusEl.className = 'score-status pass';
-    msgEl.innerHTML = '<p style="text-align:center; font-size:17px;">Great work! You\'ve demonstrated a solid understanding of Hilscher-Clarke\'s history, values, and safety expectations.</p>';
-    SCORM.setScore(quizScore, 75);
-  } else {
-    statusEl.textContent = 'NOT YET — TRY AGAIN';
-    statusEl.className = 'score-status fail';
-    msgEl.innerHTML = '<p style="text-align:center; font-size:17px;">You need 75% to pass. Review the material and try again, or reach out to your supervisor for support.</p>';
-    SCORM.setScore(quizScore, 75);
+    // Populate completion screen
+    document.getElementById('finalScore').textContent = quizScore + '%';
+    var statusEl = document.getElementById('finalStatus');
+    var msgEl = document.getElementById('completionMsg');
+    if (quizScore >= 75) {
+      statusEl.textContent = 'PASSED';
+      statusEl.className = 'score-status pass';
+      msgEl.innerHTML = '<p style="text-align:center; font-size:17px;">Great work! You\'ve demonstrated a solid understanding of Hilscher-Clarke\'s history, values, and safety expectations.</p>';
+      try { SCORM.setScore(quizScore, 75); } catch(e2) {}
+    } else {
+      statusEl.textContent = 'NOT YET — TRY AGAIN';
+      statusEl.className = 'score-status fail';
+      msgEl.innerHTML = '<p style="text-align:center; font-size:17px;">You need 75% to pass. Review the material and try again, or reach out to your supervisor for support.</p>';
+      try { SCORM.setScore(quizScore, 75); } catch(e2) {}
+    }
+    saveState();
+    updateNav();
+  } catch(e) {
+    console.error('finalizeQuiz error:', e);
   }
-  saveState();
 }
 
 function restoreQuiz() {
@@ -1226,18 +1237,20 @@ function restoreQuiz() {
 
 /* ── Persistence ─────────────────────────────────────────────── */
 function saveState() {
-  SCORM.saveProgress({
+  try { SCORM.saveProgress({
     screen: currentScreen,
     visited: visited,
     quizSelections: quizSelections,
+    quizLocked: quizLocked,
     quizSubmitted: quizSubmitted,
     quizScore: quizScore,
     matchComplete: matchComplete
-  });
+  }); } catch(e) { console.error('saveState error:', e); }
 }
 
 /* ── Auto-complete on close ──────────────────────────────────── */
 window.addEventListener('beforeunload', function() {
+  try {
   if (!SCORM._isFinished()) {
     saveState();
     if (quizSubmitted && quizScore >= 75) {
@@ -1250,6 +1263,7 @@ window.addEventListener('beforeunload', function() {
     SCORM.setValue("cmi.core.exit", quizSubmitted && quizScore >= 75 ? "" : "suspend");
     SCORM.finish();
   }
+  } catch(e) { console.error('beforeunload error:', e); }
 });
 </script>
 </body>
