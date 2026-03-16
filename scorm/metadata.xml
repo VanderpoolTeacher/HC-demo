@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lom xmlns="http://www.imsglobal.org/xsd/imsmd_rootv1p2p1">
+  <general>
+    <title><langstring xml:lang="en">Welcome to Hilscher-Clarke — First-Year Onboarding</langstring></title>
+    <description><langstring xml:lang="en">Introductory onboarding module covering company history, FIRST THINGS FIRST core values, service areas, safety culture, and organizational structure. Includes a 4-question knowledge check with 75% mastery threshold.</langstring></description>
+    <keyword><langstring xml:lang="en">onboarding</langstring></keyword>
+    <keyword><langstring xml:lang="en">orientation</langstring></keyword>
+    <keyword><langstring xml:lang="en">Hilscher-Clarke</langstring></keyword>
+    <keyword><langstring xml:lang="en">values</langstring></keyword>
+    <keyword><langstring xml:lang="en">safety</langstring></keyword>
+  </general>
+  <lifecycle>
+    <version><langstring xml:lang="en">1.0</langstring></version>
+    <status><source><langstring xml:lang="en">LOMv1.0</langstring></source><value><langstring xml:lang="en">Final</langstring></value></status>
+  </lifecycle>
+  <technical>
+    <format>text/html</format>
+  </technical>
+  <educational>
+    <learningresourcetype><source><langstring xml:lang="en">LOMv1.0</langstring></source><value><langstring xml:lang="en">Exercise</langstring></value></learningresourcetype>
+    <typicallearningtime><datetime>PT15M</datetime></typicallearningtime>
+  </educational>
+</lom>
