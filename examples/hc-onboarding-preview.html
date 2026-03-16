@@ -6,7 +6,41 @@
 <title>Welcome to Hilscher-Clarke — First-Year Onboarding</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<script src="scorm_api.js"></script>
+<script>
+/**
+ * Inline SCORM 1.2 API Wrapper (self-contained preview)
+ * Mirrors scorm/scorm_api.js so this file works when opened directly.
+ */
+var SCORM=(function(){
+  var _api=null,_initialized=false,_finished=false,_startTime=null;
+  var _data={
+    "cmi.core.lesson_status":"incomplete","cmi.core.score.raw":"",
+    "cmi.core.score.min":"0","cmi.core.score.max":"100",
+    "cmi.core.session_time":"00:00:00","cmi.suspend_data":"",
+    "cmi.core.lesson_location":"0","cmi.core.student_name":"",
+    "cmi.core.student_id":"","cmi.core.exit":""
+  };
+  function _findAPI(w){var t=0;while(w.API==null&&w.parent&&w.parent!==w){if(++t>500)return null;w=w.parent;}return w.API||null;}
+  function _getAPI(){var a=_findAPI(window);if(!a&&window.opener)a=_findAPI(window.opener);return a;}
+  function _elapsed(){if(!_startTime)return"00:00:00";var s=Math.floor((new Date()-_startTime)/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;return(h<10?"0":"")+h+":"+(m<10?"0":"")+m+":"+(sec<10?"0":"")+sec;}
+  function _currentTime(){var d=new Date(),h=d.getHours(),m=d.getMinutes(),s=d.getSeconds();return(h<10?"0":"")+h+":"+(m<10?"0":"")+m+":"+(s<10?"0":"")+s;}
+  var LS_KEY="scorm_hc_onboarding_sample";
+  function _trySaveLocal(){try{localStorage.setItem(LS_KEY,JSON.stringify({lesson_status:_data["cmi.core.lesson_status"],score:_data["cmi.core.score.raw"],lesson_location:_data["cmi.core.lesson_location"],suspend_data:_data["cmi.suspend_data"],saved_at:new Date().toISOString()}));}catch(e){}}
+  function _tryRestoreLocal(){try{var r=localStorage.getItem(LS_KEY);if(!r)return null;var b=JSON.parse(r);if(b.lesson_status)_data["cmi.core.lesson_status"]=b.lesson_status;if(b.score)_data["cmi.core.score.raw"]=b.score;if(b.lesson_location)_data["cmi.core.lesson_location"]=b.lesson_location;if(b.suspend_data){_data["cmi.suspend_data"]=b.suspend_data;try{return JSON.parse(b.suspend_data);}catch(e){}}return null;}catch(e){return null;}}
+  function initialize(){if(_initialized)return true;_api=_getAPI();_startTime=new Date();if(!_api){console.warn("SCORM 1.2: No LMS API found — standalone mode.");_initialized=true;_tryRestoreLocal();return false;}var ok=_api.LMSInitialize("");if(ok==="true"||ok===true){_initialized=true;_data["cmi.core.student_name"]=_api.LMSGetValue("cmi.core.student_name")||"";_data["cmi.core.student_id"]=_api.LMSGetValue("cmi.core.student_id")||"";_data["cmi.core.lesson_status"]=_api.LMSGetValue("cmi.core.lesson_status")||"not attempted";_data["cmi.suspend_data"]=_api.LMSGetValue("cmi.suspend_data")||"";_data["cmi.core.lesson_location"]=_api.LMSGetValue("cmi.core.lesson_location")||"0";return true;}return false;}
+  function finish(){if(!_initialized||_finished)return true;_finished=true;_data["cmi.core.session_time"]=_elapsed();if(!_api){_trySaveLocal();return true;}_api.LMSSetValue("cmi.core.lesson_status",_data["cmi.core.lesson_status"]);if(_data["cmi.core.score.raw"]!==""){_api.LMSSetValue("cmi.core.score.raw",_data["cmi.core.score.raw"]);_api.LMSSetValue("cmi.core.score.min","0");_api.LMSSetValue("cmi.core.score.max","100");}_api.LMSSetValue("cmi.core.session_time",_data["cmi.core.session_time"]);_api.LMSSetValue("cmi.suspend_data",_data["cmi.suspend_data"]);_api.LMSSetValue("cmi.core.lesson_location",_data["cmi.core.lesson_location"]);_api.LMSSetValue("cmi.core.exit",_data["cmi.core.exit"]);_api.LMSCommit("");var result=_api.LMSFinish("");_trySaveLocal();return(result==="true"||result===true);}
+  function getValue(k){return(_api&&_initialized)?_api.LMSGetValue(k):(_data[k]||"");}
+  function setValue(k,v){_data[k]=String(v);if(_api&&_initialized&&!_finished)_api.LMSSetValue(k,String(v));}
+  function commit(){if(_api&&_initialized&&!_finished)_api.LMSCommit("");_trySaveLocal();}
+  function setStatus(s){var v=["not attempted","incomplete","completed","passed","failed","browsed"];setValue("cmi.core.lesson_status",v.indexOf(s)>-1?s:"incomplete");}
+  function setScore(raw,mastery){mastery=(mastery!==undefined)?mastery:75;raw=Math.round(Math.max(0,Math.min(100,raw)));_data["cmi.core.score.raw"]=String(raw);_data["cmi.core.score.min"]="0";_data["cmi.core.score.max"]="100";var st=(raw>=mastery)?"passed":"failed";_data["cmi.core.lesson_status"]=st;if(_api&&_initialized&&!_finished){_api.LMSSetValue("cmi.core.score.raw",String(raw));_api.LMSSetValue("cmi.core.score.min","0");_api.LMSSetValue("cmi.core.score.max","100");_api.LMSSetValue("cmi.core.lesson_status",st);_api.LMSCommit("");}}
+  var _ic=0;
+  function recordInteraction(id,response,result,weight){if(!_api||!_initialized)return;var n=_ic;try{_api.LMSSetValue("cmi.interactions."+n+".id",String(id));_api.LMSSetValue("cmi.interactions."+n+".type","choice");_api.LMSSetValue("cmi.interactions."+n+".student_response",String(response));_api.LMSSetValue("cmi.interactions."+n+".result",String(result));_api.LMSSetValue("cmi.interactions."+n+".weighting",String(weight!==undefined?weight:1));_api.LMSSetValue("cmi.interactions."+n+".time",_currentTime());_ic++;}catch(e){}}
+  function saveProgress(obj){try{var j=JSON.stringify(obj);if(j.length>4000){var s={screen:obj.screen,completed:obj.completed,score:obj.score};j=JSON.stringify(s);}setValue("cmi.suspend_data",j);setValue("cmi.core.lesson_location",String(obj.screen||0));commit();}catch(e){}}
+  function loadProgress(){var r=getValue("cmi.suspend_data");if(!r)return _tryRestoreLocal();try{return JSON.parse(r);}catch(e){return null;}}
+  return{initialize:initialize,finish:finish,getValue:getValue,setValue:setValue,commit:commit,setStatus:setStatus,setScore:setScore,saveProgress:saveProgress,loadProgress:loadProgress,recordInteraction:recordInteraction,getStudentName:function(){return _data["cmi.core.student_name"];},getStudentId:function(){return _data["cmi.core.student_id"];},_isFinished:function(){return _finished;}};
+})();
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 
